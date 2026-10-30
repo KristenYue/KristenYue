@@ -1,117 +1,92 @@
-# 岳玉婷 | AI Agent 工程与评测
+# 岳玉婷 | Yuting Yue
 
-**AI Agent / 大模型应用开发 · Agent Runtime · RAG · Evaluation**
+> AI软件测试 / LLM & Agent Evaluation / AI Reliability  
+> Python · pytest｜模型评估｜故障注入｜自动化回归｜质量门禁
 
-伦敦大学学院（UCL）通信工程硕士，北京交通大学通信工程本科，预计 **2026 年 12 月毕业**。
+## 关于我 About Me
 
-专注于 AI Agent 系统的工程实现与可靠性评测，具备从业务任务建模、Agent 工作流与工具调用开发，到冻结评测、故障注入、自动化测试和实验分析的完整项目经验。
+UCL通信工程硕士，求职方向为**AI软件测试、AI可靠性、LLM/Agent评测和测试开发**。
 
-**求职方向：AI Agent / 大模型应用开发 / Agent 评测与可靠性**
+关注AI系统的可测性、稳定性、可追溯性与发布质量，具备以下实践：
 
-## 核心能力
+- 🤖 LLM/Agent工作流契约测试与轨迹验证
+- 💥 超时、429、5xx、坏JSON等故障注入与恢复验证
+- 📊 Accuracy、Macro-F1、Recall等模型指标评估
+- 🔍 Bad Case分析、数据泄漏防控与回归集建设
+- 🧪 Python/pytest自动化测试与GitHub Actions质量门禁
+- 📝 JSONL日志、工具调用轨迹和运行审计分析
 
-- **Agent 工程：** LangGraph、自研 Agent Runtime、Tool Calling、状态管理、错误恢复
-- **大模型应用：** RAG、Prompt Engineering、结构化输出、中文 NLP、业务工作流
-- **评测与可靠性：** 冻结任务、轨迹对齐、故障注入、结果契约、可复现实验
-- **工程实践：** Python、Pytest、Git、GitHub Actions、Gradio、自动化测试
+## 精选项目 Featured Projects
 
-## 代表项目
+### 🤖 AI Agent可靠性测试与故障恢复
 
-### 1. [FSO Agent Runtime Benchmark](https://github.com/KristenYue/fso-agent-runtime-benchmark)
+面向工具调用型AI Agent构建可靠性评估框架，重点验证工作流契约、异常恢复、工具轨迹和版本发布质量。
 
-**预注册对比 LangGraph 与自研轻量 Agent Runtime，验证不同 Agent 架构在相同条件下的行为一致性与运行开销。**
+- 设计8类workflow contract
+- 在36个Agent任务上执行288项自动化检查
+- 覆盖输出一致性、轨迹顺序、证据溯源和降级状态
+- 注入超时、429、5xx、坏JSON等7类故障
+- 验证重试、降级和人工接管路径，7/7按预期恢复
+- 开发run audit CLI，输出轨迹、错误、风险标记和评估结果
+- 52项工程测试全部通过，并形成发布前回归门禁
 
-- 独立实现不依赖 LangGraph、LangChain Core 的轻量 Agent Runtime
-- 冻结任务、工具、模型参数与预算，完成公平可复现的对照实验
-- LangGraph 与自研 Runtime 均完成 `24/24` 个 Challenge 任务
-- 两侧均产生 `112` 次工具调用，并对齐终止状态、最终配置与工具轨迹
-- 提示词 Token 数保持一致，总 Token 差异仅为 `20`
-- 完成 `500` 轮离线配对实验：自研 Runtime 中位调度开销 `0.295 ms`，LangGraph 基线为 `6.210 ms`
-- 建立 `125` 项自动化测试，GitHub Actions 覆盖 Python 3.11 和 3.12
-- 保存预注册方案、冻结数据、原始运行记录和实验报告，支持结果复核
-
-`Python` · `Agent Runtime` · `LangGraph` · `Tool Calling` · `Evaluation` · `Pytest`
-
----
-
-### 2. [Public Opinion Agent Evaluation](https://github.com/KristenYue/public-opinion-agent-eval)
-
-**面向中文互联网舆情研判场景，构建包含信息处理、风险分析和结构化报告生成的 Agent 应用。**
-
-- 将舆情分析任务拆分为可执行的 Agent 工作流
-- 实现检索增强、工具调用、证据整理和结构化输出
-- 强调分析结论与来源证据之间的可追溯性
-- 建立评测数据、失败案例与结果分析流程
-- 提供可交互的在线演示入口，展示完整业务链路
-
-`LLM Agent` · `RAG` · `Tool Calling` · `Structured Output` · `Gradio`
+[查看项目 View Project](https://github.com/KristenYue/agent-reliability-eval)
 
 ---
 
-### 3. [Agent Reliability Evaluation](https://github.com/KristenYue/agent-reliability-eval)
+### 📊 AI模型测试与风险复核
 
-**针对工具调用型 Agent 建立可靠性评测体系，验证 Agent 在异常输入和工具故障下的行为。**
+在本科毕设情感分析系统基础上重构模型评估链路，重点处理数据泄漏、类别不均衡、负面样本漏检和高置信误判。
 
-- 设计工具错误、无效输入、不可行配置等故障场景
-- 检查终止状态、最终回答、工具轨迹与预期契约是否一致
-- 评估 Agent 的错误识别、任务拒绝和故障恢复能力
-- 保存结构化评测数据与可复现实验结果
-- 通过自动化测试防止数据、契约和结果意外漂移
+- 统一XGBoost与中文RoBERTa推理输出
+- 建立Accuracy、Macro-F1、Negative Recall多指标评估
+- 按事件切分169/35/38条样本，避免同事件数据泄漏
+- 对107条高风险样本二次复核并修正24条标签
+- Negative Recall由3.6%提升至60.7%
+- 将高置信误判和负面漏检转化为Bad Case回归规则
 
-`Agent Evaluation` · `Failure Recovery` · `Tool Calling` · `Pytest`
+[查看项目 View Project](https://github.com/KristenYue/public-opinion-agent-eval)
 
 ---
 
-### 4. [Chinese Sentiment Analysis Thesis](https://github.com/KristenYue/chinese-sentiment-analysis-thesis)
+### 🧪 竞技软件核心模块测试与自动化
 
-**面向中文社交媒体评论的情感分析研究，本科毕业设计获北京市优秀本科毕业设计（论文）。**
+以竞技游戏公开流程为业务背景，验证状态机、数值边界、接口契约、请求幂等、弱网和日志分析能力。
 
-- 完成中文社交媒体文本清洗、特征处理、建模与实验分析
-- 对比不同情感分析方法的表现并分析模型误差
-- 整理代码、实验结果和论文材料，形成可复现项目
+- 使用Python/pytest构建122个参数化自动化场景
+- 覆盖状态迁移、数值边界、重复请求和服务端一致性
+- 模拟延迟、丢包、重复包和乱序
+- 使用10万条模拟事件验证流式日志分析
+- 配置GitHub Actions自动化回归
 
-`NLP` · `Sentiment Analysis` · `Machine Learning` · `Python`
+[查看项目 View Project](https://github.com/KristenYue/valorant-core-qa)
 
-## 教育与经历
+## 能力方向 Focus Areas
 
-### University College London（UCL）
+### AI系统测试
 
-**MSc Communication Engineering｜通信工程硕士**  
-2025.09 – 2026.12
+`LLM Evaluation` `Agent Evaluation` `Workflow Contract`  
+`Failure Injection` `Recovery Testing` `Trajectory Validation`
 
-### 北京交通大学
+### 模型评估
 
-**通信工程本科**  
-2021.09 – 2025.06
+`Accuracy` `Macro-F1` `Precision` `Recall`  
+`Bad Case Analysis` `Data Leakage` `Class Imbalance`
 
-- 本科毕业设计：社交媒体评论情感分析研究
-- 获北京市优秀本科毕业设计（论文）
+### 测试工程
 
-### 中国电信
+`Python` `pytest` `Requests` `Postman`  
+`GitHub Actions` `JSON/JSONL` `Docker` `Linux`
 
-**软件开发实习生**  
-2024.06 – 2024.08
+## 当前关注 Currently Exploring
 
-- 参与 Python 自动化工具开发
-- 完成数据处理、文件处理与业务流程自动化相关工作
-- 参与需求沟通、功能实现和测试交付
+- LLM非确定性输出的稳定性与回归测试
+- RAG检索、生成和引用链路的分层评估
+- Agent工具调用轨迹与工作流契约测试
+- Prompt注入、越权调用和异常输入测试
+- AI系统评测集、Bad Case和发布门禁建设
 
-## 我的工程方法
+## 联系方式 Contact
 
-我关注的不只是 Agent 能否在一次演示中完成任务，还关注：
-
-- 任务、工具和成功条件是否定义清楚
-- 不同方案之间的对比是否公平
-- 工具调用与状态变化是否可以追踪
-- Agent 遇到错误后能否安全恢复或正确拒绝
-- 结果能否通过自动化测试和冻结数据验证
-- 项目是否具有清晰文档并能够被其他人复现
-
-## Contact
-
-- GitHub：[KristenYue](https://github.com/KristenYue)
-- Email：`yueyt1112@163.com`
-- 求职方向：**AI Agent / 大模型应用开发 / Agent 评测与可靠性**
-
-
-欢迎交流 AI Agent 工程、Agent Runtime、RAG 与大模型评测。
+- GitHub: [KristenYue](https://github.com/KristenYue)
+- Email: yueyt1112@163.com
