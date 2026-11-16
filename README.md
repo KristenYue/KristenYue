@@ -1,25 +1,22 @@
-# 岳玉婷 / Yuting Yue
+# 岳玉婷 · Yuting Yue
 
-**AI 软件测试 · LLM / Agent 评测 · AI 可靠性**
+### Systems Software · Verification Tooling · Simulation · Reliable AI Infrastructure
 
-UCL 通信工程硕士，关注 AI 系统的评测、回归与故障恢复。主要使用 Python、pytest 和 GitHub Actions，围绕模型输出质量、Agent 工具调用、RAG 检索、安全边界与运行时稳定性构建可复现测试。
+UCL 通信工程硕士、北京交通大学通信工程本科。使用 **C++/Python** 构建设备运行时、仿真验证工具、故障注入平台与可恢复 Agent Runtime，关注复杂软件在并发、重试、故障和版本演进中的可靠性。
 
-## 代表项目
+`C++17` · `Python` · `Linux` · `CMake/CTest` · `pytest` · `FastAPI` · `PostgreSQL` · `Redis Streams` · `Docker` · `GitHub Actions`
 
-### [Agent 可靠性回归评估](https://github.com/KristenYue/agent-reliability-eval)
+## Engineering evidence
 
-对 Agent 的任务完成、工具调用、预算约束、异常恢复和人工审批流程进行回归评估；保留机器可读报告与复现命令。
+| 技术方向 | 项目证据 | 可执行结果 |
+|---|---|---|
+| **系统软件与设备验证** | [Edge Device Verification](https://github.com/KristenYue/edge-device-verification-lab) → [Smart Shelf](https://github.com/KristenYue/smart-supermarket-shelf) | C++17 状态机、有界并发、TCP/协议契约、故障注入；98 个验证场景、83.30% 覆盖率、50,000 条稳定性场景 |
+| **AI Infra 与可靠性** | [Agent Runtime](https://github.com/KristenYue/agent-runtime-quality-platform) → [Telecom Incident Agent](https://github.com/KristenYue/telecom-network-incident-agent) | checkpoint、lease/fencing、幂等、Redis Streams、PostgreSQL；180/180 功能契约、70/70 故障处置 |
+| **通信仿真与研发工具** | [FSO Coding Simulator](https://github.com/KristenYue/fso-coding-interleaving-simulator) | RS/LDPC、Gamma–Gamma、固定相干衰落、group-aware CI；14 个主实验与 12 个独立复现实验脚本 |
 
-### [AI 模型测试与风险复核](https://github.com/KristenYue/public-opinion-agent-eval)
+## Two review paths
 
-围绕文本分类与风险复核流程，整理数据切分、Bad Case 分析、回归测试和评测报告，明确离线指标的适用边界。
+- **系统软件 / 工具链：** [Edge Verification](https://github.com/KristenYue/edge-device-verification-lab) → [Smart Shelf](https://github.com/KristenYue/smart-supermarket-shelf) → [Runtime & Telecom](https://github.com/KristenYue/telecom-network-incident-agent)
+- **AI 基础设施 / 可靠性：** [Agent Runtime](https://github.com/KristenYue/agent-runtime-quality-platform) → [Telecom Agent](https://github.com/KristenYue/telecom-network-incident-agent) → [Edge Verification](https://github.com/KristenYue/edge-device-verification-lab)
 
-### [竞技软件测试自动化](https://github.com/KristenYue/valorant-core-qa)
-
-使用 Python 与 pytest 建模匹配、选人、回合结算、局内经济和断线重连场景，覆盖状态转换、异常输入与弱网故障注入。
-
-## 方法与工具
-
-- **测试与评测：** pytest、接口/契约测试、数据驱动测试、回归测试、故障注入、Bad Case 分析
-- **AI 质量：** Accuracy、Macro-F1、Recall、RAG 评测、Prompt Injection、模型与数据漂移
-- **工程工具：** Python、Requests、Git、GitHub Actions、Docker、JSONL / CSV
+工程方法：**场景与风险建模 → 可执行契约 → 确定性故障注入 → Trace/指标 → 修复与回归 → CI 发布门禁**
