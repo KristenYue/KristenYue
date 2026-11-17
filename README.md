@@ -86,15 +86,47 @@ flowchart LR
 
 [固件架构、配置版本与验证范围](https://github.com/KristenYue/smart-supermarket-shelf/blob/main/docs/FIRMWARE_VALIDATION.md) · [遥测 v2 协议](https://github.com/KristenYue/smart-supermarket-shelf/blob/main/docs/TELEMETRY_V2.md)
 
-## 阅读导览
+## 面向研发岗位的项目证据链
 
-| 如果你关注 | 我的亮点技术 | 建议先看 |
-| --- | --- | --- |
-| **半导体 / AI 芯片 · 工业 AI 应用、诊断平台、研发工具** | 接入设备观测，检索诊断知识，管理工具权限和任务执行，输出可追踪的诊断结果。 | [工业 Agent 架构与复现](https://github.com/KristenYue/telecom-network-incident-agent/blob/main/docs/INDUSTRIAL_AGENT.md) |
-| **半导体设备 / 工业设备 · 设备控制软件、上位机、仿真工具** | 建模设备状态，开发通信接口，处理命令幂等、连接资源与过载。 | [C++ 设备运行时](https://github.com/KristenYue/edge-device-verification-lab) |
-| **智能终端 / 汽车软件 · Agent 应用与任务运行时** | 实现受控工具调用、进度持久化、执行权管理和故障恢复。 | [共享 Agent Runtime](https://github.com/KristenYue/agent-runtime-quality-platform) |
-| **通信 / 工业 IoT · 设备平台、端云接口与遥测服务** | 开发设备上报、配置下发和查询接口，处理弱网、重复消息和重启后的序列隔离。 | [双节点智能货架](https://github.com/KristenYue/smart-supermarket-shelf) |
+### 半导体 / AI 芯片｜工业 AI 应用、设备诊断平台与研发工具
 
+**可承担的研发任务**　将设备状态接入诊断服务，开发运行手册检索、权限校验与任务接口，并让诊断依据、工具调用和任务结果可以回查。
+
+**推荐阅读顺序**
+
+[工业设备诊断与任务编排](https://github.com/KristenYue/telecom-network-incident-agent) → [C++ 设备运行时](https://github.com/KristenYue/edge-device-verification-lab) → [共享 Agent Runtime](https://github.com/KristenYue/agent-runtime-quality-platform)
+
+先看仿真设备急停和离线如何触发不同诊断，再看设备侧如何提供状态与联锁响应，最后看执行层如何保存进度、约束工具权限并保护最终结果。[查看急停与离线的原始轨迹](https://github.com/KristenYue/telecom-network-incident-agent/blob/main/docs/device-api-smoke.jsonl)
+
+### 半导体设备 / 工业设备｜设备控制软件、上位机与仿真工具
+
+**可承担的研发任务**　定义设备状态和控制协议，构建供上位机联调的设备服务，处理重复命令、慢连接、排队超时和急停联锁，并向上层暴露可查询的设备状态。
+
+**推荐阅读顺序**
+
+[C++ 设备运行时](https://github.com/KristenYue/edge-device-verification-lab) → [工业设备诊断与任务编排](https://github.com/KristenYue/telecom-network-incident-agent) → [双节点智能货架](https://github.com/KristenYue/smart-supermarket-shelf)
+
+先看 C++ 状态机和 TCP 服务的实现，再看 Python Worker 如何调用同一模拟设备完成归位、校准和运行，最后看双节点固件如何处理采样、联网和配置回执。[查看 C++ 排队超时实测](https://github.com/KristenYue/edge-device-verification-lab/blob/main/benchmarks/windows-queue-deadline.json)
+
+### 智能终端 / 汽车软件｜Agent 应用与上层任务执行
+
+**可承担的研发任务**　将应用任务映射为受控工具调用，持久化执行进度，处理重复投递与 Worker 接管，并记录设备命令超时后的不确定结果。
+
+**推荐阅读顺序**
+
+[共享 Agent Runtime](https://github.com/KristenYue/agent-runtime-quality-platform) → [工业设备诊断与任务编排](https://github.com/KristenYue/telecom-network-incident-agent) → [C++ 设备运行时](https://github.com/KristenYue/edge-device-verification-lab)
+
+先读 Checkpoint、租约、Fencing Token 和幂等提交如何协作，再看这些机制如何进入设备任务流程，最后检查设备侧用什么规则接受或拒绝指令。[查看事务与故障窗口](https://github.com/KristenYue/telecom-network-incident-agent/blob/main/docs/DELIVERY_FAILURE_WINDOWS.md)
+
+### 通信 / 工业 IoT｜设备平台、端云接口与遥测服务
+
+**可承担的研发任务**　开发设备接入、遥测查询与配置下发接口，设计消息身份和重启会话隔离，处理弱网补发，并将可信遥测提供给上层应用。
+
+**推荐阅读顺序**
+
+[双节点智能货架](https://github.com/KristenYue/smart-supermarket-shelf) → [工业设备诊断与任务编排](https://github.com/KristenYue/telecom-network-incident-agent)
+
+先看双节点固件如何经过 MQTT/TLS 上报数据，再看上层诊断适配器如何通过既有云端接口读取遥测，并对设备身份和数据新鲜度进行校验。这条阅读路径也对应我在中国电信参与过的遥测回调、设备身份映射、状态查询和下行指令联调。[查看遥测 v2 契约](https://github.com/KristenYue/smart-supermarket-shelf/blob/main/docs/TELEMETRY_V2.md)
 ## 补充作品
 
 - [自由空间光通信编码与交织仿真](https://github.com/KristenYue/fso-coding-interleaving-simulator) · 硕士毕设代码。基于 Python 建模复杂信道空间下光通信链路的湍流信道，对比 RS、LDPC 与交织策略对误码性能和解码开销的影响。
