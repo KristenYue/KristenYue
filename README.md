@@ -90,4 +90,4 @@ Runtime 仓库的独立实验包含 **180/180 个功能场景通过**、**70 个
 ## 补充作品
 
 - [自由空间光通信编码与交织仿真](https://github.com/KristenYue/fso-coding-interleaving-simulator) · 硕士毕设代码。使用 Python 在湍流信道下比较 RS、LDPC 与不同交织策略的误码性能和解码开销。
-- [中文舆情 Agent](https://github.com/KristenYue/public-opinion-agent-eval) · 展示证据追踪、结构化报告、人工复核与风险控制。
+- [中文舆情 Agent](https://github.com/KristenYue/public-opinion-agent-eval) · 基于本科机器学习毕设底座（北京交通大学优秀毕业设计），搭建agent platform。展示证据追踪、结构化报告、人工复核与风险控制。
