@@ -86,9 +86,9 @@ flowchart LR
 
 [固件架构、配置版本与验证范围](https://github.com/KristenYue/smart-supermarket-shelf/blob/main/docs/FIRMWARE_VALIDATION.md) · [遥测 v2 协议](https://github.com/KristenYue/smart-supermarket-shelf/blob/main/docs/TELEMETRY_V2.md)
 
-## 按研发岗位查看证据
+## 阅读导览
 
-| 行业与岗位方向 | 可承担的软件开发任务 | 建议先看 |
+| 如果你关注 | 我的亮点技术 | 建议先看 |
 | --- | --- | --- |
 | **半导体 / AI 芯片 · 工业 AI 应用、诊断平台、研发工具** | 接入设备观测，检索诊断知识，管理工具权限和任务执行，输出可追踪的诊断结果。 | [工业 Agent 架构与复现](https://github.com/KristenYue/telecom-network-incident-agent/blob/main/docs/INDUSTRIAL_AGENT.md) |
 | **半导体设备 / 工业设备 · 设备控制软件、上位机、仿真工具** | 建模设备状态，开发通信接口，处理命令幂等、连接资源与过载。 | [C++ 设备运行时](https://github.com/KristenYue/edge-device-verification-lab) |
@@ -97,5 +97,5 @@ flowchart LR
 
 ## 补充作品
 
-- [自由空间光通信编码与交织仿真](https://github.com/KristenYue/fso-coding-interleaving-simulator) · 硕士毕设代码。基于 Python 建模湍流信道，对比 RS、LDPC 与交织策略对误码性能和解码开销的影响。
-- [中文舆情 Agent](https://github.com/KristenYue/public-opinion-agent-eval) · 展示证据追踪、结构化报告、人工复核与风险控制。
+- [自由空间光通信编码与交织仿真](https://github.com/KristenYue/fso-coding-interleaving-simulator) · 硕士毕设代码。基于 Python 建模复杂信道空间下光通信链路的湍流信道，对比 RS、LDPC 与交织策略对误码性能和解码开销的影响。
+- [中文舆情 Agent](https://github.com/KristenYue/public-opinion-agent-eval) 基于本科机器学习毕业设计（北京交通大学优秀毕业设计）搭建的agent platform。· 展示证据追踪、结构化报告、人工复核与风险控制。
