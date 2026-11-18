@@ -16,9 +16,8 @@
 | **智能汽车** | 车端 Agent、智能终端应用、场景任务执行、智驾研发辅助工具、车云数据接口 |
 | **嵌入式AI&机器人技术** | 机器人 Agent、任务编排、技能调用、设备状态查询、ROS 2 接入 |
 
-以上是技术迁移与求职方向；公开仓库验证的是仿真设备、AIoT 节点与 ROS 2 仿真工作站，不声称已完成真实产线、量产车辆或机器人真机部署。
 
-## Core Technology System
+## 项目逻辑
 
 ```mermaid
 flowchart LR
@@ -30,6 +29,7 @@ flowchart LR
     E --> A
 ```
 
+我的项目从设备接入延伸到软件平台。设备端提供可查询的状态和受约束的控制接口，任务平台负责持久化和执行权，诊断应用根据设备状态与运行手册生成可追溯的结果。
 - **AI Application：** 自然语言任务理解、工业知识检索、证据关联、诊断解释与业务报告。
 - **Agent Runtime：** Planner 接口、工具注册、执行上下文、长任务状态、人工确认与恢复。
 - **Intelligent Device Integration：** C++ 设备协议、IoT 端云数据、ROS 2 Topic / Service / Action。
