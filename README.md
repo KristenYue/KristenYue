@@ -1,207 +1,276 @@
-# 岳玉婷 · Yuting Yue
+# Hi, I'm Yuting Yue 👋
 
-### AI 应用与任务平台研发｜Python / C++｜AI芯片/智能汽车/具身智能
+### 通信与设备系统软件研发｜C++/Linux Runtime｜工业 AI 与可靠任务平台
 
-UCL 通信工程硕士 · 北京交通大学通信工程本科  
-中国电信物联网研发 · 生产系统 AI 应用开发经历
+UCL 通信工程硕士、北京交通大学通信工程学士，预计 2026 年 12 月毕业。  
+具有中国电信物联网研发和生产系统 AI 应用经历，关注设备、网络与工业系统中的软件工程问题。
 
-围绕 **AI 应用工程化、可靠任务执行、设备与模型接口**开展项目开发：将自然语言目标转为结构化工具调用，连接知识库、设备状态与业务服务，完成任务执行、进度反馈、异常处理和结果持久化。
-
-技术优势：将通信与设备背景延伸到软件研发-既关注模型如何理解任务、调用工具，也关注任务怎样执行、接口怎样连接，以及异常后如何保留可信结果。
-
-**技术主线：业务应用 → 执行内核 → 设备与模型接口 → 可核查结果。**
+我主要使用 **C++ / Linux / Python** 开发设备 Runtime、模型 SDK、可靠任务平台与可追踪 AI 应用。  
+可靠性评测、故障注入、Trace 与 CI 是贯穿项目的工程方法，而不是单一的“测试岗位”定位。
 
 ---
 
-## 按行业阅读路线（项目逻辑、关联与证据链）
+## 项目之间的关系
 
-### 项目结构：4 个核心项目，3 个业务场景
+```mermaid
+flowchart TB
+    A[工业与网络业务场景] --> B[AI Agent 应用层]
+    B --> C[可靠任务执行平台]
+    C --> D[C++ / Linux 设备 Runtime]
+    D --> E[通信协议与设备接入]
+    D --> F[模型推理 SDK]
+    D --> G[车载与嵌入式执行环境]
 
-**核心项目 1 包含三个业务场景，核心项目 2—4 分别提供执行、设备与模型接口、端云通信能力。** 
+    H[契约验证 / 故障注入 / Trace / CI] -.贯穿各层.-> B
+    H -.贯穿各层.-> C
+    H -.贯穿各层.-> D
+    H -.贯穿各层.-> F
+    H -.贯穿各层.-> G
+```
 
-| 编号 | 项目名称 | 项目职责 | 主要技术 |
-|---|---|---|---|
-| **核心项目 1** | **[工业 Agent](https://github.com/KristenYue/telecom-network-incident-agent)** | AI 业务应用：模型调用、知识检索、工具编排与结果生成；包含下述三个业务场景 | Python、LLM / RAG、FastAPI、设备 Adapter |
-| **核心项目 2** | **[Agent Runtime](https://github.com/KristenYue/agent-runtime-quality-platform)** | 通用执行内核：工具注册、权限与预算、审批、Checkpoint、幂等与恢复 | PostgreSQL、Lease / Heartbeat / Fencing、Trace |
-| **核心项目 3** | **[C++ 设备与推理 SDK](https://github.com/KristenYue/edge-device-verification-lab)** | 设备状态与通信接口，以及 Python 调用 C++ 原生模型 | C++17、TCP、RAII、有界并发、pybind11、ONNX Runtime |
-| **核心项目 4** | **[AIoT 端云系统](https://github.com/KristenYue/smart-supermarket-shelf)** | 设备感知、遥测传输、离线恢复、配置管理与云端查询 | C++、MQTT/TLS、AWS IoT、Java API |
+这套项目组合覆盖了一条较完整的软件链路：
 
-**三个业务场景都接入核心项目 1「工业 Agent」中：**
-
-1. **机器人任务**：查询工作站状态、执行巡检、反馈进度与取消任务。
-2. **工业设备诊断**：读取设备观测、检索知识、生成带来源的诊断。
-3. **车辆服务**：解释车辆信号，审批后调用模拟服务，保存执行结果。
-
-![不同行业阅读路线](assets/industry-routes.gif)
-
-<sub>项目阅读导航示意 · [静态版本](assets/industry-routes.png)</sub>
-
-### 行业一：具身智能 / 机器人
-
-**对应研发方向：机器人 AI 应用、任务平台、应用后端、设备技能接入。**
-
-| 阅读顺序 | 看哪个项目、哪个模块 | 对应能力与证据 |
-|---|---|---|
-| **① 看业务场景 1** | **[核心项目 1：工业 Agent → 机器人任务](https://github.com/KristenYue/telecom-network-incident-agent/blob/main/docs/ROBOT_DELIVERY.md)** | 模型选择工具、技能前置状态、ROS 2 Service / Action、进度反馈与取消 |
-| **② 看共用执行机制** | **[核心项目 2：Agent Runtime](https://github.com/KristenYue/agent-runtime-quality-platform)** | 执行预算、工具契约、Checkpoint、幂等与恢复边界 |
-| **③ 看设备软件基础** | **[核心项目 3：C++ 设备与推理 SDK → 设备运行时](https://github.com/KristenYue/edge-device-verification-lab)** | 状态守卫、通信接口、超时处理与有界资源 |
-
-**证据链：将 AI 任务接到设备技能接口，并处理执行过程中的状态、进度和异常。**
-
-实际结果：真实模型完成 **3 次决策、2 次工具调用**的逻辑巡检；独立 ROS 2 验收完成 **3/3 点巡检**，另一次在 **1/3 点**请求取消并收敛为 `canceled`。
-
-[模型轨迹](https://github.com/KristenYue/telecom-network-incident-agent/blob/main/docs/evidence/robot-live.json) · [ROS 2 云端验收](https://github.com/KristenYue/telecom-network-incident-agent/actions/runs/44509829892)
-
-### 行业二：半导体 / AI 芯片
-
-**对应研发方向：AI 应用、模型 SDK、研发工具软件、设备应用软件。**
-
-| 阅读顺序 | 看哪个项目、哪个模块 | 对应能力与证据 |
-|---|---|---|
-| **① 看原生模型接口** | **[核心项目 3：C++ 设备与推理 SDK → 推理 SDK](https://github.com/KristenYue/edge-device-verification-lab/tree/main/inference_sdk)** | Tensor 契约、内存所有权、GIL、异常转换、数值对齐与 Wheel 交付 |
-| **② 看业务场景 2** | **[核心项目 1：工业 Agent → 工业设备诊断](https://github.com/KristenYue/telecom-network-incident-agent)** | C++ 设备观测、原生知识检索、模型工具调用与诊断引用 |
-| **③ 看共用执行机制** | **[核心项目 2：Agent Runtime](https://github.com/KristenYue/agent-runtime-quality-platform)** | 多步骤工具执行、预算、上下文与结果持久化 |
-
-**证据链：能开发跨语言模型接口，并将模型与设备能力接入实际可运行的软件应用。**
-
-实际结果：BGE 输出 **3×512**，C++ SDK 与 Python ORT 最大绝对误差 **1.53×10⁻⁷**；Windows / Ubuntu 安装执行通过；真实模型经 **2 次工具调用**完成设备观测与原生知识检索。
-
-[数值与延迟记录](https://github.com/KristenYue/edge-device-verification-lab/blob/main/inference_sdk/benchmarks/windows-bge.json) · [联合应用轨迹](https://github.com/KristenYue/telecom-network-incident-agent/blob/main/docs/evidence/native-llm-live.json)
-
-### 行业三：智能汽车
-
-**对应研发方向：车载 Agent 应用、智能终端服务、设备与云端平台。**
-
-| 阅读顺序 | 看哪个项目、哪个模块 | 对应能力与证据 |
-|---|---|---|
-| **① 看业务场景 3** | **[核心项目 1：工业 Agent → 车辆服务](https://github.com/KristenYue/telecom-network-incident-agent/blob/main/docs/VEHICLE_ADAPTER.md)** | 信号解释、知识查询、审批、DBC 子集解码与虚拟 CAN |
-| **② 看共用执行机制** | **[核心项目 2：Agent Runtime](https://github.com/KristenYue/agent-runtime-quality-platform)** | 写操作确认、上下文恢复、工具账本与执行记录 |
-| **③ 看端云通信基础** | **[核心项目 4：AIoT 端云系统](https://github.com/KristenYue/smart-supermarket-shelf)** | 消息身份、离线缓存、重连、配置版本与遥测一致性 |
-
-**证据链：围绕设备状态开发 AI 服务，并处理控制授权、数据新鲜度和端云通信中的一致性问题。**
-
-实际结果：真实模型完成胎压解释与模拟空调审批执行；Linux `vcan0` 实际收发并解码信号。独立 AIoT 合成实验处理 **50,000 条遥测**，正常、重复、乱序和冲突计数完整闭合。
-
-[车辆模型轨迹](https://github.com/KristenYue/telecom-network-incident-agent/blob/main/docs/evidence/vehicle-live.json) · [虚拟 CAN 验收](https://github.com/KristenYue/telecom-network-incident-agent/actions/runs/44505903871) · [IoT 实验](https://github.com/KristenYue/smart-supermarket-shelf/blob/main/iot-test-harness/docs/TEST_REPORT.md)
-
-<sub>行业路线用于核查业务与支撑能力，不表示每个场景都已串联四个项目。机器人真实模型与 ROS 2 分别验收；设备为软件仿真，车辆采用合成服务与虚拟 CAN，原生推理使用 CPU。具体集成关系与运行范围见对应仓库。</sub>
+> 设备与通信接入 → C++ Runtime / SDK → 可靠任务执行 → AI Agent 应用 → 系统验证与可观测性
 
 ---
 
-## 核心研发成果
+## 不同岗位的项目阅读路径
 
-### 01 · AI 应用：从模型决策到设备任务
-
-**[工业 Agent →](https://github.com/KristenYue/telecom-network-incident-agent)**
-
-将模型接口、知识检索与设备能力封装成完整业务闭环：
-
-- **机器人任务**：查询工作站状态、提交巡检技能、保存逐点反馈，支持取消与最终结果查询。
-- **工业设备诊断**：读取 C++ 设备快照，调用原生 ONNX 知识工具，生成带文档身份与版本的诊断。
-- **车辆服务**：解释胎压观测，检索项目知识；写操作进入显式审批后执行，保存命令与状态。
-- **执行边界**：工具白名单、Pydantic 参数契约、前置状态检查、调用预算与有限重试；未知副作用不盲目重放。
-
-| 已运行链路 | 实际结果 | 核查入口 |
+| 目标方向 | 推荐阅读顺序 | 对应能力 |
 |---|---|---|
-| 真实模型 + 机器人逻辑工作站 | **3 次模型决策、2 次工具调用**，完成三点巡检并保存报告 | [模型轨迹](https://github.com/KristenYue/telecom-network-incident-agent/blob/main/docs/evidence/robot-live.json) |
-| 规则 Planner + Linux ROS 2 + Runtime | **3/3 点巡检完成**；另一次在 **1/3 点**请求取消，终态为 `canceled` | [云端验收](https://github.com/KristenYue/telecom-network-incident-agent/actions/runs/44509829892) |
-| 真实模型 + C++ 设备 + 原生知识检索 | **2 次工具调用**后完成诊断，检索后端明确标记为 `native_onnx` | [联合轨迹](https://github.com/KristenYue/telecom-network-incident-agent/blob/main/docs/evidence/native-llm-live.json) |
-| Linux SocketCAN / vcan | 实际虚拟总线收发，并按项目 DBC 解出左前轮 **190 kPa** | [云端验收](https://github.com/KristenYue/telecom-network-incident-agent/actions/runs/44505903871) |
+| **半导体设备软件 / 工业设备平台研发** | [Edge Device Verification Lab](https://github.com/KristenYue/edge-device-verification-lab) → [Smart Supermarket Shelf](https://github.com/KristenYue/smart-supermarket-shelf) → [Industrial Incident Agent](https://github.com/KristenYue/telecom-network-incident-agent) | 设备接入、通信协议、状态管理、模型 SDK、故障诊断 |
+| **通信网络软件 / 无线 AI / AIOps** | [Industrial Incident Agent](https://github.com/KristenYue/telecom-network-incident-agent) → [Agent Runtime](https://github.com/KristenYue/agent-runtime-quality-platform) → [FSO Simulator](https://github.com/KristenYue/fso-coding-interleaving-simulator) | 通信背景、网络诊断、任务编排、可靠执行、链路仿真 |
+| **AI 芯片 Runtime / SDK / 系统软件** | [Edge Device Verification Lab](https://github.com/KristenYue/edge-device-verification-lab) → [QEMU vECU Runtime](https://github.com/KristenYue/qemu-vehicle-ecu-runtime-lab) → [Agent Runtime](https://github.com/KristenYue/agent-runtime-quality-platform) | C++ SDK、推理接口、异步执行、ARM64、性能与可靠性验证 |
+| **工业 AI / Agent 平台研发** | [Industrial Incident Agent](https://github.com/KristenYue/telecom-network-incident-agent) → [Agent Runtime](https://github.com/KristenYue/agent-runtime-quality-platform) → [Edge Device Verification Lab](https://github.com/KristenYue/edge-device-verification-lab) | Tool Calling、任务状态机、可恢复执行、模型与设备集成 |
 
-机器人真实模型与 ROS 2 为两组独立验收；车辆采用合成服务与虚拟总线。各结果保留对应执行环境。
+车载中间件、机器人系统平台和 EDA 工具软件，是上述底层能力可以迁移的应用场景，而不是彼此割裂的项目方向。
 
-### 02 · 任务平台：执行权、持久化与故障恢复
+---
 
-**[Agent Runtime →](https://github.com/KristenYue/agent-runtime-quality-platform)**
+# 核心项目
 
-实现与模型供应商解耦的执行内核，业务侧注入 Planner 与工具，内核统一管理动作、预算、审批、观测、Checkpoint 与 Trace。
+## 1. Edge Device Verification Lab
 
-| 工程难点 | 实现机制 |
+**面向设备平台和 AI Runtime 的 C++/Python SDK 原型。**
+
+项目将设备通信、模型推理、异步任务与质量门禁组织在统一工程结构中，用于验证从接口接入到模型交付的完整链路。
+
+**主要工作：**
+
+- 使用 C++17 实现设备客户端、并发请求与生命周期管理。
+- 基于 `pybind11` 向 Python 暴露原生接口。
+- 集成 ONNX Runtime，封装 BGE Embedding 推理与异步 Worker。
+- 建立 Windows、Ubuntu Wheel 构建及 clean-install 验证流程。
+- 对模型精度、延迟、吞吐量和量化退化进行统一验证。
+
+**结果：**
+
+- 完成 **4,200 / 4,200** 次设备请求。
+- BGE 输出维度为 `3 × 512`，与 Python ONNX Runtime 的最大绝对误差为 `1.53e-7`。
+- 1 / 2 / 4 Worker 异步吞吐量分别达到 **7.79 / 15.05 / 25.89 req/s**。
+- 动态 INT8 模型体积缩小 **74.8%**、P50 延迟约提升 **2.66 倍**。
+- 同时发现量化后 Recall@1 从 `1.00` 降至 `0.50`，因此将精度回归作为发布门禁，而不是只看性能提升。
+
+**项目优势：**
+
+> 不只完成模型调用，还覆盖 C++ SDK、Python Binding、异步调度、跨平台构建和模型质量门禁。
+
+---
+
+## 2. Agent Runtime Quality Platform
+
+**面向长流程 AI 任务的可靠执行平台。**
+
+项目重点不是 Prompt 展示，而是解决 Agent 任务在超时、重试、进程中断、重复提交和外部服务异常下的执行一致性问题。
+
+**主要工作：**
+
+- 设计任务状态机、Checkpoint、Lease、Fencing Token 和恢复机制。
+- 使用 PostgreSQL 保存业务状态，使用 Redis Streams 组织任务消费。
+- 实现幂等提交、Outbox、失败关闭与重复执行抑制。
+- 建立可回放 Trace、故障注入和冻结契约测试。
+- 将 Runtime 接入真实业务 Agent，验证平台与应用的边界。
+
+**结果：**
+
+- **180 / 180** 个冻结功能契约任务通过。
+- **70 / 70** 个故障场景符合预期，其中 68 个成功恢复，2 个安全失败关闭。
+- 60 次重复提交未产生额外最终写入。
+- 完成 PostgreSQL、Redis 真实服务集成验证。
+
+**项目优势：**
+
+> 将 Agent 从一次性脚本提升为具有状态管理、恢复能力、执行边界和可观测性的任务系统。
+
+---
+
+## 3. Telecom Network Incident Agent
+
+**面向网络与工业设备故障的诊断 Agent。**
+
+项目把模型决策、设备工具调用、知识检索和任务状态管理组合为可追踪的诊断流程，并接入 ROS2、SocketCAN 和 ONNX 推理组件。
+
+**主要工作：**
+
+- 实现 Tool Calling、结构化诊断计划和步骤级 Trace。
+- 接入 ROS2 逻辑机器人工作站，支持巡检任务和取消控制。
+- 使用 Linux SocketCAN / vcan 构建设备诊断链路。
+- 集成本地 ONNX 模型和诊断知识检索。
+- 对模型输出、工具结果和任务终态进行统一记录。
+
+**结果：**
+
+- 真实模型完成 3 次决策、2 次工具调用和 3 点巡检任务。
+- ROS2 规则规划模式完成 **3 / 3** 个巡检点。
+- 任务在第 1 个巡检点取消后能够正确进入 `canceled` 状态。
+- 本地模型诊断完成 2 次工具调用，并返回可追踪的检索证据。
+- SocketCAN 诊断链路识别到左前轮胎压异常：`190 kPa`。
+
+**项目优势：**
+
+> 将通信网络背景、设备接入和 AI Agent 结合起来，重点展示可执行、可取消、可追踪的诊断闭环。
+
+---
+
+## 4. SDV Communication Integration Lab
+
+**面向车载与设备服务的 C++20 通信 Runtime。**
+
+项目围绕服务通信、诊断状态、请求幂等和异常恢复展开，也可迁移至工业设备服务、机器人平台和边缘节点软件。
+
+**主要工作：**
+
+- 使用 C++20 实现车辆服务 Runtime。
+- 支持 CAN / SocketCAN 和受控 SOME/IP over UDP 通信。
+- 实现 DTC、Freeze Frame、请求幂等、Journal Recovery。
+- 处理并发请求协调、Backpressure 和重启恢复。
+- 建立协议回放、状态一致性和性能验证矩阵。
+
+**结果：**
+
+- 32 个并发相同状态变更请求中，业务 Handler 只执行 1 次，其余 31 次复用结果。
+- 30 次响应丢失与重启重试中，第二次 Handler 执行次数为 0，重复动作数为 0。
+- 300 个回放任务和 200 个独立来源场景生成一致摘要。
+- 27 组性能矩阵中完成 **3,600 / 3,600** 次调用，最差 P99 为 `389 μs`，最大 RSS 为 `7.58 MiB`。
+
+**项目优势：**
+
+> 不只实现通信接口，还处理重复请求、并发协调、持久化恢复和协议级一致性。
+
+---
+
+## 5. QEMU Vehicle ECU Runtime Lab
+
+**面向 ARM64 嵌入式环境的进程与服务管理 Runtime。**
+
+项目在 QEMU ARM64 环境中实现轻量 Execution Manager，验证服务依赖、健康检查和故障恢复机制。
+
+**主要工作：**
+
+- 使用 `posix_spawnp` 管理子进程生命周期。
+- 使用 `epoll`、`signalfd`、`timerfd` 构建事件驱动主循环。
+- 通过 Unix Domain Socket 实现 Heartbeat。
+- 支持依赖启动、崩溃检测、卡死检测与重启预算。
+- 使用 Buildroot 构建可启动 ARM64 系统镜像。
+
+**结果：**
+
+- 在 Buildroot 2026.08.2、Linux 6.18.7、QEMU `virt/Cortex-A53` 环境完成验收。
+- 一次 CI 运行中，服务从 `UNHEALTHY` 恢复至 `READY` 用时 `205 ms`。
+- 受管理的 SOME/IP 服务恢复至 `READY` 用时 `199 ms`。
+
+**项目优势：**
+
+> 展示从 Linux 系统编程到 ARM64 虚拟环境验收的完整路径，而不局限于上层应用开发。
+
+---
+
+## 6. Smart Supermarket Shelf
+
+**面向 AIoT 设备数据的通信、清洗与异常处理系统。**
+
+项目模拟智能货架设备上报，重点处理网络传输、消息乱序、重复数据和设备身份冲突。
+
+**主要工作：**
+
+- 构建设备遥测数据生成与接收链路。
+- 实现 MQTT/TLS 通信和设备身份校验。
+- 处理重复消息、乱序数据与身份冲突。
+- 记录清洗结果与异常分类。
+
+**结果：**
+
+在 50,000 条合成遥测消息中识别：
+
+- 48,512 条正常消息。
+- 1,012 条重复消息。
+- 13 条乱序消息。
+- 463 条设备身份冲突消息。
+
+**项目优势：**
+
+> 将通信专业背景落到设备协议、消息语义和异常数据处理，而不是停留在单纯的数据分析。
+
+---
+
+# 支撑项目与研究基础
+
+| 项目 | 主要内容 |
 |---|---|
-| 模型动作怎样成为受控调用 | Planner Protocol、显式工具注册、参数校验、权限与预算 |
-| 中断后怎样复用已完成工作 | Checkpoint、工具结果账本、幂等身份与重放判断 |
-| 旧 Worker 恢复后怎样阻止陈旧写入 | Lease / Heartbeat 判断执行权，单调 Fencing Token 约束提交 |
-| 消息重复投递怎样处理 | 业务部署使用 Redis Streams Pending / 回收，结合持久化状态与幂等结果 |
-| 危险动作怎样获得确认 | 保存待审批上下文，显式批准后恢复执行 |
-
-**冻结合成契约验收：180/180 功能任务；70/70 故障处置，其中 68 次恢复、2 次按预期失败关闭；60 组重复提交的额外最终写入为 0。**
-
-[逐项原始报告](https://github.com/KristenYue/agent-runtime-quality-platform/blob/main/data/evaluation/acceptance_v1/report.json) · [PostgreSQL / Redis 真实服务验收](https://github.com/KristenYue/telecom-network-incident-agent/actions/runs/44509829892)
-
-本地契约实验与真实服务验收分别记录，避免将单机结果外推为分布式生产容量。
-
-### 03 · C++ 工程：设备运行时与原生模型接口
-
-**[C++ 设备与推理 SDK →](https://github.com/KristenYue/edge-device-verification-lab)**
-
-**设备运行时**
-
-- C++17 状态机与状态守卫，安全联锁独立于上层模型执行。
-- move-only Socket RAII 明确线程、队列和 Worker 之间的资源所有权。
-- 有界 Worker、连接队列、请求缓存与排队期限，避免无上限积压。
-- 同一互斥边界内完成缓存检查、命令执行与响应入账，约束重复动作。
-
-**原生推理 SDK**
-
-- pybind11 封装 ONNX Runtime Session，校验输入名、dtype、rank、shape 与连续内存。
-- Run 期间保留输入所有者，只在原生执行范围释放 GIL。
-- 输出交由 Python 独立持有，避免 Session 销毁后出现悬空引用。
-- Windows / Ubuntu Wheel 构建与干净环境安装，验证运行库随包交付。
-
-| 结果 | 口径与证据 |
-|---|---|
-| **4,200/4,200 设备请求成功** | Windows 回环对照，4 Worker、32 队列槽；[完整数据](https://github.com/KristenYue/edge-device-verification-lab/blob/main/benchmarks/windows-baseline-comparison.json) |
-| **排队过期返回 `QUEUE_TIMEOUT`** | 在进入设备核心前拒绝过期请求；[实测响应](https://github.com/KristenYue/edge-device-verification-lab/blob/main/benchmarks/windows-queue-deadline.json) |
-| **BGE 输出 3×512，最大绝对误差 1.53×10⁻⁷** | C++ SDK 与 Python ORT 数值对齐；[原始数据](https://github.com/KristenYue/edge-device-verification-lab/blob/main/inference_sdk/benchmarks/windows-bge.json) |
-| **Ubuntu 原生包独立安装执行通过** | 编译、参考计算图与干净环境验证；[云端记录](https://github.com/KristenYue/edge-device-verification-lab/actions/runs/44506857643) |
-
-设备吞吐对照与 BGE 原生接口均未获得提速；成果集中于**资源有界、跨语言契约、生命周期安全与业务集成**，保留完整对照数据。
-
-### 04 · 端云通信：身份、离线策略与数据一致性
-
-**[AIoT 端云系统 →](https://github.com/KristenYue/smart-supermarket-shelf)**
-
-双节点分别完成环境与库存感知，经 MQTT/TLS 接入云端，通过 Java 查询 API 为应用和 Agent 提供遥测。
-
-- **消息身份**：`deviceID:bootId:sequence` 区分设备、重启会话与序列。
-- **离线策略**：固定容量 Outbox、满队列淘汰计数、指数退避与恢复补发。
-- **配置管理**：单调版本、完整参数校验、原子应用与结果回执。
-- **数据消费**：重复、乱序和同身份载荷冲突分别分类；旧遥测不作为当前状态。
-
-**50,000 条合成遥测：48,512 条正常入库，1,012 条重复、13 条乱序、463 条身份冲突被分类拦截，计数完整闭合。**
-
-[实验报告](https://github.com/KristenYue/smart-supermarket-shelf/blob/main/iot-test-harness/docs/TEST_REPORT.md) · [遥测协议](https://github.com/KristenYue/smart-supermarket-shelf/blob/main/docs/TELEMETRY_V2.md)
+| [Public Opinion Agent Evaluation](https://github.com/KristenYue/public-opinion-agent-eval) | 事件感知舆情分类、选择性自动化与 Agent 评测；在 6 个未见事件、339 条评论上验证泛化能力 |
+| [FSO Agent Runtime Benchmark](https://github.com/KristenYue/fso-agent-runtime-benchmark) | 对比 LangGraph 与自研 Runtime 的状态、配置、Trace 和本地调度开销 |
+| [FSO Coding & Interleaving Simulator](https://github.com/KristenYue/fso-coding-interleaving-simulator) | 自由空间光通信编码、交织与信道仿真，包含独立复现实验和失败案例 |
+| [Chinese Sentiment Analysis Thesis](https://github.com/KristenYue/chinese-sentiment-analysis-thesis) | 北京市优秀本科毕业设计，提供公开可复现实验、模型对比和误差分析 |
+| [Agent Reliability Evaluation](https://github.com/KristenYue/agent-reliability-eval) | Agent 故障注入、可靠性指标与回归评测 |
+| [Airbnb Listing Ranking](https://github.com/KristenYue/airbnb-listing-ranking) | 排序特征、模型评估和数据分析 |
+| [Valorant Core QA](https://github.com/KristenYue/valorant-core-qa) | 面向复杂规则系统的自动化验证与缺陷建模 |
 
 ---
 
-## AI 方法与通信专业基础
+# 技术栈
 
-| 项目 | 关键方法 | 结果或交付 |
-|---|---|---|
-| **[中文文本分析与知识研判 Agent](https://github.com/KristenYue/public-opinion-agent-eval)** | LangGraph、Hybrid RAG、事件感知 Reviewer、选择性自动处理与人工回写 | 同一冻结集 6 个未见事件、339 条评论，纯自动 Accuracy **31.27% → 56.05%，提升 24.78 个百分点** |
-| **[中文情感分析本科毕设](https://github.com/KristenYue/chinese-sentiment-analysis-thesis)** | 中文预处理、TF-IDF、XGBoost、模型重训与 FastAPI 推理 | 原毕设 143 条随机测试集，重训 Accuracy **90.91%**、Macro-F1 **88.56%**；与跨事件实验分别报告 |
-| **[自由空间光通信编码与交织仿真](https://github.com/KristenYue/fso-coding-interleaving-simulator)** | Gamma–Gamma、RS / LDPC、统一 Eb/N0、独立控制交织与相干长度、分组统计 | **14 个主实验脚本、12 个独立复现模块、7 个工程 Bad Case** |
-| **[Agent Runtime 受控对照](https://github.com/KristenYue/fso-agent-runtime-benchmark)** | 冻结模型、Prompt、工具、预算和评分器后比较轨迹 | 两组均 **24/24** 通过；500 组离线本地调度中位数 **6.210 / 0.295 ms**，仅比较本地调度开销 |
-| **[AirRank 评论建模与房源排序](https://github.com/KristenYue/airbnb-listing-ranking)** | TextCNN / BiLSTM、按房源隔离数据、误差分析与排序基线 | 从评论级预测到房源级聚合，保留训练配置与结果导出入口 |
+### C++ / Linux
+
+- C++17 / C++20
+- RAII、智能指针、并发与线程安全
+- POSIX Process、Socket、IPC
+- `epoll` / `signalfd` / `timerfd`
+- CMake、GTest、GitHub Actions
+
+### 设备与通信
+
+- TCP / UDP
+- MQTT / TLS
+- CAN / SocketCAN
+- SOME/IP 子集
+- ROS2
+- 设备状态与遥测数据处理
+
+### AI 与平台开发
+
+- Python、FastAPI、Pydantic
+- PostgreSQL、Redis Streams
+- Tool Calling、RAG、Agent Workflow
+- ONNX Runtime、pybind11
+- 模型量化、性能分析与质量回归
+
+### 可靠性工程
+
+- 状态机与执行契约
+- 幂等、Outbox、Checkpoint
+- Lease、Fencing Token
+- 故障注入与恢复验证
+- Trace、Replay、CI 与回归门禁
 
 ---
 
-## 我能够承担的研发模块
+## 工程边界
 
-**AI 应用开发**  
-模型接口、结构化工具调用、知识检索与引用、基于观测的诊断和报告生成。
+这些项目主要用于验证软件架构、接口设计和系统可靠性：
 
-**任务平台与应用后端**  
-任务 API、状态与事件流、审批、幂等提交、Checkpoint、可靠投递与恢复。
+- 设备链路包含软件模拟、SocketCAN / vcan 和逻辑机器人环境。
+- ARM64 项目基于 QEMU 与 Buildroot，并非真实 ECU 硬件。
+- 模型性能数据主要来自 CPU 推理环境。
+- README 中的性能结果均对应具体实验环境，不代表生产 SLA 或真实硬件上限。
 
-**设备与模型集成**  
-Python / C++ 接口、TCP、ROS 2 Service / Action、MQTT 遥测、ONNX 原生推理封装。
-
-**工程交付**  
-接口契约、状态一致性、资源生命周期、错误分类、数值对齐、跨平台构建和运行证据。
-
-通信工程背景帮助我理解协议、链路和设备状态；物联网研发与 AI 应用经历将这些能力连接到业务接口、任务平台和智能系统。
-
----
-
-<sub>项目统一阅读方式：业务问题 → 架构与模块 → 核心设计 → 运行命令 → 原始结果。设备与机器人仿真、车辆合成服务、CPU 模型执行及真实基础服务分别标注，不混用实验口径。</sub>
+我更关注的是：**能否把设备、模型和任务系统连接成一个边界清晰、可以恢复、可以验证、可以持续演进的软件系统。**
